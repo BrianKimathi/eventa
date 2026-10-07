@@ -1,0 +1,12 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate  # In prod, we never auto-create tables! We validate schema only.
+    show-sql: false
+  flyway:
+    enabled: true  # Flyway handles migrations in production
+
+logging:
+  level:
+    com.briankimathi.event_booking: INFO
+    org.springframework.security: WARN

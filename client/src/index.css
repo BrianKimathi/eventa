@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+
+:root {
+  --primary: #f23e14;
+  --primary-hover: #d9330d;
+  --primary-light: #fff4f1;
+  --primary-slate: #fff4f1;
+  --heading: #1f1f39;
+  --paragraph: #6e7191;
+  --shopperz-slate: #d9dbe9;
+  --shopperz-gray: #eff0f6;
+  --bg-main: #f7f7fc;
+}
+
+body {
+  font-family: 'Urbanist', sans-serif;
+  background-color: var(--bg-main);
+  color: #1f1f39;
+  min-height: 100vh;
+}
+
+/* ShopKing Clean White & Coral-Orange Primary Design Token Utility Classes */
+.btn-primary {
+  background-color: #f23e14;
+  color: #ffffff;
+  font-weight: 700;
+  padding: 0.625rem 1.25rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 200ms ease;
+  box-shadow: 0px 8px 15px rgba(242, 62, 20, 0.18);
+}
+
+.btn-primary:hover {
+  background-color: #d9330d;
+  box-shadow: 0px 10px 20px rgba(242, 62, 20, 0.28);
+}
+
+.btn-secondary {
+  background-color: #ffffff;
+  color: #1f1f39;
+  border: 1px solid #d9dbe9;
+  font-weight: 700;
+  padding: 0.625rem 1.25rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 200ms ease;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.04);
+}
+
+.btn-secondary:hover {
+  background-color: #eff0f6;
+  border-color: #c0c4d8;
+  color: #f23e14;
+}
+
+.card-solid {
+  background-color: #ffffff;
+  border: 1px solid #eff0f6;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0px 6px 32px rgba(0, 0, 0, 0.04);
+}
+
+.input-solid {
+  background-color: #ffffff;
+  border: 1px solid #d9dbe9;
+  color: #1f1f39;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  outline: none;
+  font-size: 0.875rem;
+  width: 100%;
+  transition: border-color 200ms ease;
+}
+
+.input-solid:focus {
+  border-color: #f23e14;
+  box-shadow: 0 0 0 3px rgba(242, 62, 20, 0.15);
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(31, 31, 57, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 1rem;
+}
+
+.modal-content {
+  background-color: #ffffff;
+  border: 1px solid #eff0f6;
+  border-radius: 1.25rem;
+  width: 100%;
+  max-width: 520px;
+  padding: 1.75rem;
+  box-shadow: 0px 15px 40px rgba(73, 72, 72, 0.16);
+}

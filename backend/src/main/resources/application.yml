@@ -1,0 +1,90 @@
+# ------------------------
+# Server Configuration
+# ------------------------
+server:
+  port: 8080       # Port your Spring Boot app will run on
+
+# ------------------------
+# Spring Application Settings
+# ------------------------
+spring:
+  application:
+    name: event-booking  # Name of your application
+
+  # ------------------------
+  # Mail Configuration
+  # ------------------------
+  mail:
+    host: ${SPRING_MAIL_HOST:smtp.gmail.com}
+    port: ${SPRING_MAIL_PORT:587}
+    username: ${SPRING_MAIL_USERNAME:support@eventpulse.com}
+    password: ${SPRING_MAIL_PASSWORD:password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  # ------------------------
+  # Database Configuration
+  # Override with environment variables:
+  # $env:SPRING_DATASOURCE_URL="jdbc:postgresql://localhost:5432/event_booking"
+  # $env:SPRING_DATASOURCE_USERNAME="postgres"
+  # $env:SPRING_DATASOURCE_PASSWORD="your_password"
+  # ------------------------
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/event_booking}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:2951}
+    driver-class-name: org.postgresql.Driver
+
+  # ------------------------
+  # JPA / Hibernate Settings
+  # ------------------------
+  jpa:
+    hibernate:
+      ddl-auto: update    # Automatic table update for development ease
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  # ------------------------
+  # JSON Serialization Settings
+  # ------------------------
+  jackson:
+    time-zone: UTC
+    default-property-inclusion: non_null
+
+  # ------------------------
+  # Active Profile
+  # ------------------------
+  profiles:
+    active: dev
+
+# ------------------------
+# JWT Configuration
+# ------------------------
+jwt:
+  secret: ${JWT_SECRET:your-256-bit-secret-key-change-this-in-production-min-32-chars}
+  expiration: 86400000  # 24 hours in milliseconds
+
+# ------------------------
+# Payment Gateway Configuration
+# ------------------------
+payment:
+  stripe:
+    api-key: ${STRIPE_API_KEY:sk_test_your_stripe_key}
+    webhook-secret: ${STRIPE_WEBHOOK_SECRET:whsec_your_webhook_secret}
+
+# ------------------------
+# Application Properties
+# ------------------------
+app:
+  frontend-url: ${FRONTEND_URL:http://localhost:3000}
+  email:
+    from: ${EMAIL_FROM:noreply@eventbooking.com}
+  purchase-code:
+    prefix: EVT-
+    length: 10

@@ -1,0 +1,83 @@
+name: CI/CD Pipeline - Build, Test & Deploy to Server (kim)
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Build & Test Backend and Frontends
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build & Test Spring Boot Backend
+        run: |
+          cd backend
+          chmod +x mvnw
+          ./mvnw clean package -DskipTests
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Client Store App
+        run: |
+          cd client
+          npm ci
+          npm run build
+
+      - name: Build Admin SaaS App
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+
+  deploy-to-server:
+    name: Deploy to EC2 Remote Server (kim)
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH to Server 'kim'
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}       # 16.170.222.57
+          username: ${{ secrets.SSH_USER }}   # ubuntu
+          key: ${{ secrets.SSH_PRIVATE_KEY }} # Contents of C:\Users\user\server.pem
+          script: |
+            set -e
+            echo "==> Deploying Eventa Platform on Server..."
+
+            # Create deployment directory if not existing
+            mkdir -p ~/event-booking
+            cd ~/event-booking
+
+            # If git repo exists, pull latest changes; otherwise clone/sync
+            if [ -d ".git" ]; then
+              git pull origin main || git pull origin master
+            fi
+
+            # Deploy using Docker Compose
+            docker compose down --remove-orphans || true
+            docker compose up -d --build
+
+            echo "==> Deployment Successful!"
+            docker compose ps

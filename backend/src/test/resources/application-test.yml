@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:16:///event_booking_test
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    username: test
+    password: test
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+  flyway:
+    enabled: false
+  mail:
+    host: localhost
+    port: 3025
+    username: test
+    password: test
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+
+jwt:
+  secret: test-secret-key-that-is-at-least-32-characters-long
+  expiration: 86400000
+
+logging:
+  level:
+    com.briankimathi.event_booking: INFO
+    org.flywaydb: WARN
+    org.testcontainers: WARN

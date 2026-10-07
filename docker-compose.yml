@@ -1,20 +1,79 @@
-version: "3.9"
-
 services:
+  # PostgreSQL Database Container
   postgres:
-    image: postgres:latest
-    container_name: eventbooking-postgres
+    image: postgres:15-alpine
+    container_name: eventa-postgres
     restart: always
     environment:
       POSTGRES_DB: event_booking
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-
+      POSTGRES_PASSWORD: password2951
     ports:
-      - "5432:5432"
-
+      - "5435:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - eventa-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Spring Boot 4 Backend API Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: eventa-backend
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8095:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/event_booking
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password2951
+      SPRING_MAIL_HOST: smtp.gmail.com
+      SPRING_MAIL_PORT: 587
+    networks:
+      - eventa-network
+
+  # Client Web Store Service
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: eventa-client
+    restart: always
+    ports:
+      - "8098:80"
+    depends_on:
+      - backend
+    networks:
+      - eventa-network
+
+  # Admin SaaS Control Panel Service
+  admin:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: eventa-admin
+    restart: always
+    ports:
+      - "8099:80"
+    depends_on:
+      - backend
+    networks:
+      - eventa-network
+
+networks:
+  eventa-network:
+    name: event-booking-network
+    driver: bridge
 
 volumes:
   postgres_data:
