@@ -44,4 +44,33 @@ public class EmailService {
 
         emailNotificationRepository.save(notification);
     }
+
+    public void sendHtmlEmail(String to, String subject, String htmlBody) {
+        EmailNotification notification = EmailNotification.builder()
+                .recipientEmail(to)
+                .subject(subject)
+                .body(htmlBody)
+                .status(EmailNotificationStatus.PENDING)
+                .build();
+
+        try {
+            jakarta.mail.internet.MimeMessage message = mailSender.createMimeMessage();
+            org.springframework.mail.javamail.MimeMessageHelper helper = 
+                    new org.springframework.mail.javamail.MimeMessageHelper(message, true, "UTF-8");
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(htmlBody, true);
+
+            mailSender.send(message);
+
+            notification.setStatus(EmailNotificationStatus.SENT);
+            notification.setSentAt(LocalDateTime.now());
+            log.info("HTML Email receipt sent successfully to {}", to);
+        } catch (Exception e) {
+            log.error("Failed to send HTML email to {}", to, e);
+            notification.setStatus(EmailNotificationStatus.FAILED);
+        }
+
+        emailNotificationRepository.save(notification);
+    }
 }

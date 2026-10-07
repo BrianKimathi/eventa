@@ -77,10 +77,58 @@ public class TicketService {
 
         TicketPurchase saved = ticketPurchaseRepository.save(purchase);
 
-        // Trigger email notification asynchronously
-        String emailBody = String.format("Hello %s,\n\nYour booking for '%s' is confirmed!\nPurchase Code: %s\nTickets: %d\nTotal Paid: $%s",
-                user.getFirstName(), event.getTitle(), purchaseCode, request.getQuantity(), totalAmount);
-        emailService.sendEmail(user.getEmail(), "Ticket Confirmation - " + event.getTitle(), emailBody);
+        // Build rich HTML email receipt with embedded QR code image
+        String qrImageTag = (qrCodeData != null && !qrCodeData.isEmpty())
+                ? String.format("<img src='%s' alt='Gate QR Code Pass' style='width:200px; height:200px; border-radius:12px; border:2px solid #f23e14; margin:15px 0;' />", qrCodeData)
+                : "";
+
+        String htmlReceipt = String.format("""
+                <div style="font-family: Arial, sans-serif; background-color: #f7f7fc; padding: 25px; border-radius: 16px; max-width: 550px; margin: 0 auto; color: #1f1f39; border: 1px solid #eff0f6;">
+                  <div style="text-align: center; margin-bottom: 20px;">
+                    <h1 style="color: #f23e14; margin: 0; font-size: 24px; font-weight: 800;">Eventa</h1>
+                    <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #6e7191; font-weight: 700;">Official Ticket Receipt & Entry Pass</span>
+                  </div>
+
+                  <div style="background-color: #ffffff; padding: 20px; border-radius: 12px; border: 1px solid #eff0f6;">
+                    <h2 style="margin-top: 0; font-size: 18px; color: #1f1f39;">%s</h2>
+                    <p style="font-size: 13px; color: #6e7191; margin-bottom: 15px;">Hello <strong>%s</strong>, your ticket purchase has been confirmed!</p>
+
+                    <div style="background-color: #fff4f1; padding: 12px 16px; border-radius: 8px; font-family: monospace; font-size: 13px; font-weight: bold; color: #f23e14; display: inline-block;">
+                      Pass Code: %s
+                    </div>
+
+                    <table style="width: 100%%; margin-top: 15px; border-collapse: collapse; font-size: 13px; color: #1f1f39;">
+                      <tr style="border-bottom: 1px solid #eff0f6;">
+                        <td style="padding: 8px 0; color: #6e7191;">Pass Tier:</td>
+                        <td style="padding: 8px 0; font-weight: bold; text-align: right;">%s</td>
+                      </tr>
+                      <tr style="border-bottom: 1px solid #eff0f6;">
+                        <td style="padding: 8px 0; color: #6e7191;">Quantity:</td>
+                        <td style="padding: 8px 0; font-weight: bold; text-align: right;">%d</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 8px 0; color: #6e7191;">Total Paid:</td>
+                        <td style="padding: 8px 0; font-weight: 800; color: #f23e14; text-align: right;">$%s</td>
+                      </tr>
+                    </table>
+
+                    <div style="text-align: center; margin-top: 20px;">
+                      %s
+                      <p style="font-size: 11px; color: #6e7191; margin: 0;">Scan this QR code at venue gate entry</p>
+                    </div>
+                  </div>
+                </div>
+                """,
+                event.getTitle(),
+                user.getFirstName(),
+                purchaseCode,
+                ticketType.getName(),
+                request.getQuantity(),
+                totalAmount.toString(),
+                qrImageTag
+        );
+
+        emailService.sendHtmlEmail(user.getEmail(), "Event Ticket Receipt & Pass - " + event.getTitle(), htmlReceipt);
 
         return mapToPurchaseResponse(saved);
     }
