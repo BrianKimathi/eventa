@@ -2,120 +2,120 @@
 
 Eventa is a production-grade, multi-tenant ticketing store and admin SaaS platform designed for hosting live events, selling digital QR ticket passes, and managing multi-gateway payments (M-Pesa STK Push, Stripe, Paystack, and Bitcoin NOWPayments Sandbox).
 
-Built with **Spring Boot 4**, **PostgreSQL**, **React (Vite)**, and styled with the **ShopKing** light design system.
+Built with Spring Boot 4, PostgreSQL, React (Vite), and styled with the ShopKing light design system.
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
-### 🛒 Client Web App (`client/`)
-- **Dynamic Auto-Sliding Hero Banner**: Auto-rotates live featured events from the database every 5 seconds.
-- **ShopKing Tile Directory**: Filter live events by category (Tech, Music, Business, Arts) or search term.
-- **Multi-Gateway Ticket Checkout**: Purchase tickets via **M-Pesa STK Push (Daraja)**, **Visa/Mastercard**, or **Bitcoin BTC (NOWPayments)**.
-- **Instant Digital QR Ticket Passes**: Auto-generated QR entry codes dispatches via email and viewable in **My Tickets**. Downloadable as branded PNG cards.
-- **Organizer Profile Workspace (`/profile`)**:
+### Client Web App (client/)
+- Dynamic Auto-Sliding Hero Banner: Auto-rotates live featured events from the database every 5 seconds.
+- ShopKing Tile Directory: Filter live events by category (Tech, Music, Business, Arts) or search term.
+- Multi-Gateway Ticket Checkout: Purchase tickets via M-Pesa STK Push (Daraja), Visa/Mastercard, or Bitcoin BTC (NOWPayments).
+- Instant Digital QR Ticket Passes: Auto-generated QR entry codes dispatched via email and viewable in My Tickets. Downloadable as branded PNG cards.
+- Organizer Profile Workspace (/profile):
   - Hosted events dashboard with ticket sales progress bars.
   - Event publishing wizard.
   - Email OTP Password Reset workflow.
 
-### 🛡️ Admin SaaS Platform (`frontend/`)
-- **Role-Based Security Lock (`/admin/login`)**: Protected route guard restricting access strictly to authenticated `ROLE_ADMIN` accounts.
-- **Single Settings Panel (`/admin/settings`)**:
-  - **App & Site Branding**: Custom site title, tagline, contact email, phone, and office address.
-  - **Hero Banner Control**: Dynamic headline, badge pill, subheadline, and background image URL.
-  - **Payment Gateways**: Single toggle to enable M-Pesa Daraja, Stripe, Paystack, or Bitcoin NOWPayments.
-  - **SMTP Configuration**: Outgoing mail server settings.
-  - **Admin Password Reset**: Direct administrator password updates.
-- **Event Moderation (`/admin/events`)**: Review, approve (`PUBLISHED`), or unpublish (`CANCELLED`) event submissions.
-- **Sales Orders & Refund Management (`/admin/orders`)**:
+### Admin SaaS Platform (frontend/)
+- Role-Based Security Lock (/admin/login): Protected route guard restricting access strictly to authenticated ROLE_ADMIN accounts.
+- Single Settings Panel (/admin/settings):
+  - App & Site Branding: Custom site title, tagline, contact email, phone, and office address.
+  - Hero Banner Control: Dynamic headline, badge pill, subheadline, and background image URL.
+  - Payment Gateways: Single toggle to enable M-Pesa Daraja, Stripe, Paystack, or Bitcoin NOWPayments.
+  - SMTP Configuration: Outgoing mail server settings.
+  - Admin Password Reset: Direct administrator password updates.
+- Event Moderation (/admin/events): Review, approve (PUBLISHED), or unpublish (CANCELLED) event submissions.
+- Sales Orders & Refund Management (/admin/orders):
   - Audit sales orders across all events with CSV export.
-  - **Automated Refunds**: One-click refund API (`PUT /api/v1/admin/orders/{id}/refund`) that cancels orders, marks payment as `REFUNDED`, and automatically restores event ticket capacity.
-- **Issued Ticket Passes Audit (`/admin/tickets`)**: View and verify all generated gate QR codes.
-- **Commission Rules Engine (`/admin/promotions`)**: Set custom percentage (%) or fixed-fee ($) platform commissions per event.
-- **User & Staff Permissions (`/admin/staff`)**: Manage user roles, creator verification badges, and account suspensions.
-- **Analytics & Reports (`/admin/reports`)**: Category breakdown progress bars, turnover metrics, and CSV exports.
+  - Automated Refunds: One-click refund API (PUT /api/v1/admin/orders/{id}/refund) that cancels orders, marks payment as REFUNDED, and automatically restores event ticket capacity.
+- Issued Ticket Passes Audit (/admin/tickets): View and verify all generated gate QR codes.
+- Commission Rules Engine (/admin/promotions): Set custom percentage (%) or fixed-fee ($) platform commissions per event.
+- User & Staff Permissions (/admin/staff): Manage user roles, creator verification badges, and account suspensions.
+- Analytics & Reports (/admin/reports): Category breakdown progress bars, turnover metrics, and CSV exports.
 
 ---
 
-## 🛠️ Architecture & Tech Stack
+## Architecture & Tech Stack
 
 | Layer | Technologies |
 | :--- | :--- |
-| **Backend API** | Java 17/24, Spring Boot 4, Spring Security (JWT), Spring Data JPA, Hibernate ORM |
-| **Database** | PostgreSQL (`event_booking`) |
-| **Admin SaaS Frontend** | React, Vite, Tailwind CSS (ShopKing Light Theme), Lucide Icons |
-| **Client Frontend** | React, Vite, Tailwind CSS (ShopKing Light Theme), Lucide Icons |
-| **Integrations** | M-Pesa Daraja (STK Push Sandbox), NOWPayments Sandbox (BTC), JavaMailSender (SMTP) |
+| Backend API | Java 17/24, Spring Boot 4, Spring Security (JWT), Spring Data JPA, Hibernate ORM |
+| Database | PostgreSQL (event_booking) |
+| Admin SaaS Frontend | React, Vite, Tailwind CSS (ShopKing Light Theme), Lucide Icons |
+| Client Frontend | React, Vite, Tailwind CSS (ShopKing Light Theme), Lucide Icons |
+| Integrations | M-Pesa Daraja (STK Push Sandbox), NOWPayments Sandbox (BTC), JavaMailSender (SMTP) |
 
 ---
 
-## ⚙️ Setup & Local Running Instructions
+## Setup & Local Running Instructions
 
 ### 1. Database Setup (PostgreSQL)
-Ensure PostgreSQL is running locally on port `5432` with password `2951`. Create the database:
+Ensure PostgreSQL is running locally on port 5432 with password 2951. Create the database:
 ```sql
 CREATE DATABASE event_booking;
 ```
 
-### 2. Start Backend API (`backend/`)
+### 2. Start Backend API (backend/)
 ```bash
 cd backend
 ./mvnw spring-boot:run
 ```
-The REST API will start on **`http://localhost:8080`**. Database tables will be automatically generated by Hibernate DDL.
+The REST API will start on http://localhost:8080. Database tables will be automatically generated by Hibernate DDL.
 
-### 3. Start Client Frontend (`client/`)
+### 3. Start Client Frontend (client/)
 ```bash
 cd client
 npm install
 npm run dev
 ```
-The Client Web Store will start on **`http://localhost:3000`** (or port specified by Vite).
+The Client Web Store will start on http://localhost:3000 (or port specified by Vite).
 
-### 4. Start Admin SaaS Panel (`frontend/`)
+### 4. Start Admin SaaS Panel (frontend/)
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-Access the locked Admin Panel at **`http://localhost:3001/admin/login`**.
+Access the locked Admin Panel at http://localhost:3001/admin/login.
 
-### 5. Docker Container Deployment (`docker-compose`)
+### 5. Docker Container Deployment (docker-compose)
 Deploy both Spring Boot backend and PostgreSQL database in containerized environment:
 ```bash
 docker compose up -d --build
 ```
-This builds a lightweight multi-stage Alpine JDK image and starts the backend on port `8080` with a healthy PostgreSQL 15 volume.
+This builds a lightweight multi-stage Alpine JDK image and starts the backend on port 8085 with a healthy PostgreSQL 15 volume.
 
 ---
 
-## 🔐 Default Admin & API Credentials
+## Default Admin & API Credentials
 
-- **Admin Login Route**: `/admin/login`
-- **Default Gateway**: M-Pesa Daraja (Sandbox Till: `174379`)
-- **Bitcoin Sandbox Gateway**: NOWPayments Sandbox API integration enabled.
+- Admin Login Route: /admin/login
+- Default Gateway: M-Pesa Daraja (Sandbox Till: 174379)
+- Bitcoin Sandbox Gateway: NOWPayments Sandbox API integration enabled.
 
 ---
 
-## 📑 API Endpoints Reference
+## API Endpoints Reference
 
 ### Public API
-- `GET /api/v1/public/events` — Published events list.
-- `GET /api/v1/public/events/{id}` — Single event details.
-- `GET /api/v1/public/settings` — Public platform settings.
+- GET /api/v1/public/events — Published events list.
+- GET /api/v1/public/events/{id} — Single event details.
+- GET /api/v1/public/settings — Public platform settings.
 
 ### Authenticated User / Creator API
-- `POST /api/v1/auth/register` — User registration.
-- `POST /api/v1/auth/login` — User login & JWT issuance.
-- `POST /api/v1/users/me/tickets/purchase` — Purchase event tickets.
-- `GET /api/v1/users/me/tickets` — Get user ticket passes.
-- `POST /api/v1/creator/events` — Submit new event for approval.
-- `GET /api/v1/creator/events` — Get creator's hosted events.
+- POST /api/v1/auth/register — User registration.
+- POST /api/v1/auth/login — User login & JWT issuance.
+- POST /api/v1/users/me/tickets/purchase — Purchase event tickets.
+- GET /api/v1/users/me/tickets — Get user ticket passes.
+- POST /api/v1/creator/events — Submit new event for approval.
+- GET /api/v1/creator/events — Get creator's hosted events.
 
-### Admin API (Protected: `ROLE_ADMIN`)
-- `GET /api/v1/admin/dashboard` — Live dashboard metrics.
-- `GET /api/v1/admin/orders` — List all ticket orders.
-- `PUT /api/v1/admin/orders/{id}/refund` — Refund order & restore ticket capacity.
-- `GET /api/v1/admin/events` — Moderation directory.
-- `PUT /api/v1/admin/events/{id}/approval` — Approve / reject events.
-- `GET /api/v1/admin/settings` & `PUT /api/v1/admin/settings` — Manage platform settings.
+### Admin API (Protected: ROLE_ADMIN)
+- GET /api/v1/admin/dashboard — Live dashboard metrics.
+- GET /api/v1/admin/orders — List all ticket orders.
+- PUT /api/v1/admin/orders/{id}/refund — Refund order & restore ticket capacity.
+- GET /api/v1/admin/events — Moderation directory.
+- PUT /api/v1/admin/events/{id}/approval — Approve / reject events.
+- GET /api/v1/admin/settings & PUT /api/v1/admin/settings — Manage platform settings.
